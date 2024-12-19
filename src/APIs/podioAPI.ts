@@ -51,7 +51,6 @@ export class Podio implements IPodio {
       return;
     }
 
-
     await axios.post(
       `/oauth/token/v2`,
       {
