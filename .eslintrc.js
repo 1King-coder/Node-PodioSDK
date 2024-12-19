@@ -11,9 +11,7 @@ module.exports = {
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-      "ecmaFeatures": {
-          "jsx": true
-      },
+
       "ecmaVersion": 12,
       "sourceType": "module"
   },
@@ -22,6 +20,5 @@ module.exports = {
   ],
   "rules": {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
-    'react/react-in-jsx-scope': 'off'
   }
 };

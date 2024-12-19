@@ -9,7 +9,11 @@
     "build": "tsup"
   },
   "keywords": [
-    "podio", "typescript", "api", "sdk", "javascript"
+    "podio",
+    "typescript",
+    "api",
+    "sdk",
+    "javascript"
   ],
   "author": "1King-coder",
   "license": "ISC",
@@ -26,17 +30,18 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
+    "eslint": "^9.17.0",
     "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",
     "tsup": "^8.3.5"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/1King-coder/testeing-apis-to-further-automation-app.git"
+    "url": "git+https://github.com/1King-coder/Node-PodioSDK.git"
   },
   "bugs": {
-    "url": "https://github.com/1King-coder/testeing-apis-to-further-automation-app/issues"
+    "url": "https://github.com/1King-coder/Node-PodioSDK/issues"
   },
-  "homepage": "https://github.com/1King-coder/testeing-apis-to-further-automation-app#readme",
-  "description": ""
+  "homepage": "https://github.com/1King-coder/Node-PodioSDK#readme",
+  "description": "Open Source System Development Kit in Node for Podio"
 }
