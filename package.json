@@ -1,0 +1,42 @@
+{
+  "name": "typescript-podio-sdk",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsup"
+  },
+  "keywords": [
+    "podio", "typescript", "api", "sdk", "javascript"
+  ],
+  "author": "1King-coder",
+  "license": "ISC",
+  "dependencies": {
+    "@types/axios": "^0.9.36",
+    "@types/dotenv": "^6.1.1",
+    "@types/node-fetch": "^2.6.11",
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "fetch": "^1.1.0",
+    "node-fetch": "^3.3.2",
+    "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.3.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1King-coder/testeing-apis-to-further-automation-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/1King-coder/testeing-apis-to-further-automation-app/issues"
+  },
+  "homepage": "https://github.com/1King-coder/testeing-apis-to-further-automation-app#readme",
+  "description": ""
+}
