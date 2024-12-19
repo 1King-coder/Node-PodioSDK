@@ -155,7 +155,7 @@ export class Podio implements IPodio {
   }
 
   async getTokenHeader (): Promise<Axios.AxiosXHRConfigBase<any>> {
-    if (!(await this.isAuthenticated())) {
+    if (!this.isAuthenticated()) {
       await this.authenticate();
     }
 
