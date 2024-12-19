@@ -1,7 +1,7 @@
 import { Podio } from "./APIs/podioAPI";
 
 
-
+require("dotenv").config();
 
 
 
@@ -12,8 +12,6 @@ export default async function Main(): Promise<void> {
     username: <string>process.env.PODIO_USER,
     password: <string>process.env.PODIO_PASSWORD
   }, "./podio_token.json");
-
-  console.log(await pd.Items.GetItemByAppItemId(29317684, 752))
 
 }
 
