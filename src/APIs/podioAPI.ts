@@ -4,6 +4,7 @@ import path from "path";
 import {
   IPodio,
   IPodioItems,
+  IPodioWebhooks,
   } from "../interfaces/podio_interfaces";
 import {
   FilterOptions,
@@ -30,10 +31,12 @@ import {
 } from "../types/podio_types";
 
 import { PodioItems } from "./Methods/Items";
+import { PodioWebhooks } from "./Methods/Webhooks";
 
 export class Podio implements IPodio {
   private token: string = "";
   public Items: PodioItems;
+  public Webhooks: IPodioWebhooks;
 
   constructor(
     public creds: PodioCreds,
@@ -44,6 +47,12 @@ export class Podio implements IPodio {
     this.creds = creds;
     this.authenticate();
     this.Items = new PodioItems(this);
+    this.Webhooks = new PodioWebhooks(this);
+  }
+  criaWebhook(options: WebhookOptions, appId?: number): Promise<{ webhook_id: number; }>;
+  criaWebhook(options: WebhookOptions): Promise<{ webhook_id: number; }>;
+  criaWebhook(options: unknown, appId?: unknown): Promise<{ webhook_id: number; }> | Promise<{ webhook_id: number; }> {
+    throw new Error("Method not implemented.");
   }
 
   async authenticate(): Promise<void> {
@@ -198,29 +207,4 @@ export class Podio implements IPodio {
 
   }
 
-  async criaWebhook ( options: WebhookOptions, appId?: number): Promise<{webhook_id: number}> {
-    return <{webhook_id: number}>await this.post(
-      `/hook/app/${appId}/`,
-      options
-    )
-  }
-
-  async getWebhooks (appId: number,): Promise<Webhook[]> {
-    return <Webhook[]>await this.get(
-      `/hook/app/${appId}/`,
-    )
-  }
-
-  async deleteWebhook (webhook_id: number): Promise<object> {
-    return await this.delete(
-      `/hook/${webhook_id}/`,
-    )
-  }
-
-  async validaWebhook (webhook_id: number, webhook_verification_code: string): Promise<object> {
-    return await this.post(
-      `/hook/${webhook_id}/verify/validate`,
-      {code: webhook_verification_code}
-    )
-  }
 }

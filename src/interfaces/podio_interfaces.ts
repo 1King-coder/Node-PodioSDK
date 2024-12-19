@@ -1,4 +1,4 @@
-import { AddItemPayload, AddItemResponse, ExportOptions, ExportResponse, FilterItemsResponse, FilterOptions, FindReferenceableItemsResponse, ItemFieldsValues, ItemRevision, PodioAppItem, PodioCreatedBy, PodioCreatedVia, PodioFields, PodioFile, PodioItemRevisionDif, RearrangeOptions, WebhookOptions } from "../types/podio_types";
+import { AddItemPayload, AddItemResponse, ExportOptions, ExportResponse, FilterItemsResponse, FilterOptions, FindReferenceableItemsResponse, ItemFieldsValues, ItemRevision, PodioAppItem, PodioCreatedBy, PodioCreatedVia, PodioFields, PodioFile, PodioItemRevisionDif, RearrangeOptions, Webhook, WebhookOptions } from "../types/podio_types";
 
 
 
@@ -13,8 +13,8 @@ export interface IPodio {
   put (urlPart: string, data?: object): Promise<object>;
   delete (urlPart: string): Promise<object>;
   criaWebhook (options: WebhookOptions, appId?: number,): Promise<{webhook_id: number}>;
-  criaWebhook (options: WebhookOptions): Promise<{webhook_id: number}>;
   Items: IPodioItems
+  Webhooks: IPodioWebhooks
 }
 
 export interface IPodioItems
@@ -49,3 +49,10 @@ export interface IPodioItems
   RearrangeItem (itemId: number, rearrangeOptions: RearrangeOptions): Promise<PodioAppItem>
 }
 
+export interface IPodioWebhooks
+{
+  AddWebhook (options: WebhookOptions, appId?: number,): Promise<{webhook_id: number}>;
+  GetWebhooks (appId: number,): Promise<Webhook[]>
+  ValidateWebhook (webhook_id: number, webhook_verification_code: string): Promise<object>
+  DeleteWebhook (webhook_id: number): Promise<object>
+}
