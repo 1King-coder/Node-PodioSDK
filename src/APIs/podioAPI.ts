@@ -29,12 +29,6 @@ import {
   RearrangeOptions,
 } from "../types/podio_types";
 
-import { CPFtoOnlyNumbers } from "../Services/utils";
-
-require("dotenv").config();
-
-
-
 export class Podio implements IPodio {
   private token: string = "";
   constructor(private creds: PodioCreds)
