@@ -1,4 +1,4 @@
-# Experimental TS-Node PodioAPI SDK
+# Node PodioAPI SDK
 
 This package is a voluntary work to make life easier when developing automations and integrations
 for Podio Applications.
@@ -8,7 +8,8 @@ soon.
 
 Check https://developers.podio.com/doc for more information about the API methods.
 
-As this still in development, there is only a testing repository, soon the package development
-will be moved to other github repository dedicated to it and turn it into a open source package.
+This package still in development and is far from finishing (don't know if it will finish 1 day).
 
-Feel free to create a fork and add features in a new-feature-branch and contact me to review the pull request.
+That package is a personal initiative to make my life easier when developing automations and integrations
+for my actual job at a Academic initiative (Junior enterprise) where we use Podio a lot and I couldn't make
+any of the sdk work properly (except the php and ruby one) so I've decided to develop this one.

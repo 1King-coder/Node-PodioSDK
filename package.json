@@ -1,5 +1,5 @@
 {
-  "name": "typescript-podio-sdk",
+  "name": "node-podio-sdk",
   "version": "1.0.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

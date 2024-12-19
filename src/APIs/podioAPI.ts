@@ -8,7 +8,6 @@ import {
 import {
   FilterOptions,
   PodioTokenData,
-  PedidoStatusTexts,
   WebhookOptions,
   Webhook,
   PodioItemRevision,
@@ -30,11 +29,7 @@ import {
   RearrangeOptions,
 } from "../types/podio_types";
 
-import * as pedidosIds from "../constants/PodioPedidosFieldsIdAndFieldsValuesId";
-
-import  { PedidoDePagamentoItem } from "../models/podioModels";
 import { CPFtoOnlyNumbers } from "../Services/utils";
-import { NoSubstitutionTemplateLiteral } from "typescript";
 
 require("dotenv").config();
 
@@ -50,14 +45,14 @@ export class Podio implements IPodio {
 
   async authenticate(): Promise<void> {
     if (this.isAuthenticated()) {
-      const tokenInfo: PodioTokenData = JSON.parse(fs.readFileSync(path.join(__dirname, "./podioToken.json")).toString())
+      const tokenInfo: PodioTokenData = JSON.parse(fs.readFileSync("./podioToken.json").toString())
       this.token = tokenInfo.access_token;
       return;
     };
 
-    if (fs.existsSync(path.join(__dirname, "./podioToken.json"))) {
+    if (fs.existsSync("./podioToken.json")) {
       await this.refreshToken();
-      const tokenInfo: PodioTokenData = JSON.parse(fs.readFileSync(path.join(__dirname, "./podioToken.json")).toString())
+      const tokenInfo: PodioTokenData = JSON.parse(fs.readFileSync("./podioToken.json").toString())
       this.token = tokenInfo.access_token;
       return;
     }
@@ -76,7 +71,7 @@ export class Podio implements IPodio {
     ).then((res) => {
       const data = <PodioSuccessAuthResponse> res.data;
       if (res.status === 200) {
-        fs.writeFileSync(path.join(__dirname, "./podioToken.json"), JSON.stringify(res.data));
+        fs.writeFileSync("./podioToken.json", JSON.stringify(res.data));
         this.token = data.access_token;
         return;
       }
@@ -91,11 +86,11 @@ export class Podio implements IPodio {
 
   isAuthenticated (): boolean {
 
-    if (!fs.existsSync(path.join(__dirname, "./podioToken.json"))) {
+    if (!fs.existsSync("./podioToken.json")) {
       return false;
     }
 
-    const token: Buffer = fs.readFileSync(path.join(__dirname, "./podioToken.json"));
+    const token: Buffer = fs.readFileSync("./podioToken.json");
 
     const tokenJson: PodioTokenData = JSON.parse(token.toString());
 
@@ -131,7 +126,7 @@ export class Podio implements IPodio {
 
   async refreshToken (): Promise<void> {
 
-    const tokenFile: Buffer = fs.readFileSync(path.join(__dirname, "./podioToken.json"));
+    const tokenFile: Buffer = fs.readFileSync("./podioToken.json");
 
     if (tokenFile.length === 0) {
       throw new Error("Token file is empty");
@@ -149,7 +144,7 @@ export class Podio implements IPodio {
       }
     ).then((res) => {
       if (res.status === 200) {
-        fs.writeFileSync(path.join(__dirname, "./podioToken.json"), JSON.stringify(res.data));
+        fs.writeFileSync("./podioToken.json", JSON.stringify(res.data));
         return;
       }
     }).catch((err) => {
@@ -378,48 +373,4 @@ export class Podio implements IPodio {
     )
   }
 
-
-}
-
-export class BDProjetosPodio extends Podio {
-  private BDProjetosAppId: number;
-
-  constructor(options: PodioCreds) {
-    super(options);
-    this.BDProjetosAppId = 12995457;
-  }
-
-  async getCodigoProjetoByNome (nomeProjeto: string): Promise<string> {
-
-    const options: FilterOptions = {
-      filters: {
-        title: nomeProjeto
-      }
-    }
-
-    const data = <FilterItemsResponse> await this.post(`/item/app/${this.BDProjetosAppId}/filter/`, options);
-    if (data.items.length === 0) {
-      return "Codigo de Projeto não encontrado";
-    }
-    return (<{value: string}>data.items[0].fields.find((field) => field.external_id === "novo-codigo")?.values[0]).value;
-  }
-}
-
-export class BDMembrosPodio extends Podio {
-  private BDMembrosAppId: number;
-
-  constructor(options: PodioCreds) {
-    super(options);
-    this.BDMembrosAppId = 14469567;
-  };
-
-  async getCpfMembroById (membro_item_id: number): Promise<string> {
-    const data = <PodioAppItem> await this.get(`/app/${this.BDMembrosAppId}/item/${membro_item_id}/`);
-    if (!data) {
-      return "CPF não encontrado";
-    }
-
-    const cpf = (<{value: string}>data.fields.find((field) => field.external_id === "cpf-2")?.values[0]);
-    return cpf ? CPFtoOnlyNumbers(cpf.value) : (<{value: string}>data.fields.find((field) => field.external_id === "nome")?.values[0]).value;
-  }
 }
