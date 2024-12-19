@@ -31,22 +31,26 @@ import {
 
 export class Podio implements IPodio {
   private token: string = "";
-  constructor(private creds: PodioCreds)
+  constructor(
+    private creds: PodioCreds,
+    private token_path: string="./token.json"
+    )
   {
-     this.creds = creds;
-     this.authenticate();
+    this.token_path = token_path;
+    this.creds = creds;
+    this.authenticate();
   }
 
   async authenticate(): Promise<void> {
     if (this.isAuthenticated()) {
-      const tokenInfo: PodioTokenData = JSON.parse(fs.readFileSync("./podioToken.json").toString())
+      const tokenInfo: PodioTokenData = JSON.parse(fs.readFileSync(this.token_path).toString())
       this.token = tokenInfo.access_token;
       return;
     };
 
-    if (fs.existsSync("./podioToken.json")) {
+    if (fs.existsSync(this.token_path)) {
       await this.refreshToken();
-      const tokenInfo: PodioTokenData = JSON.parse(fs.readFileSync("./podioToken.json").toString())
+      const tokenInfo: PodioTokenData = JSON.parse(fs.readFileSync(this.token_path).toString())
       this.token = tokenInfo.access_token;
       return;
     }
@@ -64,7 +68,7 @@ export class Podio implements IPodio {
     ).then((res) => {
       const data = <PodioSuccessAuthResponse> res.data;
       if (res.status === 200) {
-        fs.writeFileSync("./podioToken.json", JSON.stringify(res.data));
+        fs.writeFileSync(this.token_path, JSON.stringify(res.data));
         this.token = data.access_token;
         return;
       }
@@ -79,11 +83,11 @@ export class Podio implements IPodio {
 
   isAuthenticated (): boolean {
 
-    if (!fs.existsSync("./podioToken.json")) {
+    if (!fs.existsSync(this.token_path)) {
       return false;
     }
 
-    const token: Buffer = fs.readFileSync("./podioToken.json");
+    const token: Buffer = fs.readFileSync(this.token_path);
 
     const tokenJson: PodioTokenData = JSON.parse(token.toString());
 
@@ -119,7 +123,7 @@ export class Podio implements IPodio {
 
   async refreshToken (): Promise<void> {
 
-    const tokenFile: Buffer = fs.readFileSync("./podioToken.json");
+    const tokenFile: Buffer = fs.readFileSync(this.token_path);
 
     if (tokenFile.length === 0) {
       throw new Error("Token file is empty");
@@ -137,7 +141,7 @@ export class Podio implements IPodio {
       }
     ).then((res) => {
       if (res.status === 200) {
-        fs.writeFileSync("./podioToken.json", JSON.stringify(res.data));
+        fs.writeFileSync(this.token_path, JSON.stringify(res.data));
         return;
       }
     }).catch((err) => {
