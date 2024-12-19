@@ -33,6 +33,8 @@ import { PodioItems } from "./Methods/Items";
 
 export class Podio implements IPodio {
   private token: string = "";
+  public Items: PodioItems;
+
   constructor(
     public creds: PodioCreds,
     public token_path: string="./token.json"
@@ -43,7 +45,6 @@ export class Podio implements IPodio {
     this.authenticate();
     this.Items = new PodioItems(this);
   }
-  Items: IPodioItems;
 
   async authenticate(): Promise<void> {
     if (this.isAuthenticated()) {
