@@ -242,7 +242,7 @@ export type PodioAppItem = {
 }
 
 
-export type PodioGetItemsFromAppResponse = {
+export type FilterItemsResponse = {
   filtered: number;
   items: PodioAppItem[];
   total: number;

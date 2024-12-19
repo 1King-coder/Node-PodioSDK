@@ -3,8 +3,8 @@ import fs from "fs";
 import path from "path";
 import {
   IPodio,
+  IPodioItems,
   } from "../interfaces/podio_interfaces";
-
 import {
   FilterOptions,
   PodioTokenData,
@@ -13,7 +13,7 @@ import {
   PodioItemRevision,
   PodioItemRevisionDif,
   PodioCreds,
-  PodioGetItemsFromAppResponse as FilterItemsResponse,
+  FilterItemsResponse,
   PodioAppItem,
   PodioSearchReferenceOptions,
   PodioSearchReferenceResponse,
@@ -29,17 +29,21 @@ import {
   RearrangeOptions,
 } from "../types/podio_types";
 
+import { PodioItems } from "./Methods/Items";
+
 export class Podio implements IPodio {
   private token: string = "";
   constructor(
-    private creds: PodioCreds,
-    private token_path: string="./token.json"
+    public creds: PodioCreds,
+    public token_path: string="./token.json"
     )
   {
     this.token_path = token_path;
     this.creds = creds;
     this.authenticate();
+    this.Items = new PodioItems(this);
   }
+  Items: IPodioItems;
 
   async authenticate(): Promise<void> {
     if (this.isAuthenticated()) {
@@ -193,157 +197,6 @@ export class Podio implements IPodio {
 
   }
 
-  async addItem (appId: number, data: AddItemPayload): Promise<AddItemResponse> {
-    /*
-    EXAMPLE OF AN ITEM PAYLOAD:
-    {
-      external_id:"pagamentos-2",
-      fields: [
-        {
-          external_id: "data-da-despesa",
-          values: [{start_date: "2024-12-19"}]
-        },
-        {
-          external_id: "descricao",
-          values: [{value: "TESTE"}]
-        },
-        {
-          external_id: "valor-2",
-          values: [{value: 200}]
-        },
-        {
-          external_id: "nome-do-membro-2",
-          values: [{value: itemId}]
-        },
-        {
-          external_id: "conta-de-pagamento",
-          values: [{value: selectionBubbleId}]
-        },
-        {
-          external_id: "realizado",
-          values: [{value: selectionBubbleId}]
-        }
-      ]
-    }
-    */
-    return <AddItemResponse> await this.post(`/item/app/${appId}/`, data);
-  }
-
-  async CloneItem (itemId: number): Promise<AddItemResponse> {
-    return <AddItemResponse> await this.post(`/item/${itemId}/clone/`);
-  }
-
-  async DeleteItem (itemId: number): Promise<object> {
-    return await this.delete(`/item/${itemId}/`);
-  }
-
-  async DeleteItemReference (itemId: number): Promise<object> {
-    return await this.delete(`/item/${itemId}/ref`);
-  }
-
-  async ExportItems (appId: number, exporter: "xls" | "xlsx", exportOptions: ExportOptions): Promise<ExportResponse> {
-    return <ExportResponse> await this.post(`/item/app/${appId}/export/${exporter}`, exportOptions);
-  }
-
-  async FilterItems (appId: number, options?: FilterOptions): Promise<FilterItemsResponse> {
-    const data = await this.post(`/item/app/${appId}/filter/`, options);
-    return <FilterItemsResponse> data;
-  }
-
-  async FilterItemsByView (appId: number, view_id: number ,options?: FilterOptions): Promise<FilterItemsResponse> {
-    const data = await this.post(`/item/app/${appId}/filter/${view_id}`, options);
-    return <FilterItemsResponse> data;
-  }
-
-  async FindReferenceableItems (field_id: number): Promise<FindReferenceableItemsResponse[]> {
-    return <FindReferenceableItemsResponse[]> await this.get(`/item/field/${field_id}/find`);
-  }
-
-  async GetFieldRanges (field_id: number): Promise<{min: number, max: number}> {
-    return <{min: number, max: number}> await this.get(`/item/field/${field_id}/range`);
-  }
-
-  async GetItem (itemId: number, mark_as_viewed: boolean=true): Promise<PodioAppItem> {
-    return <PodioAppItem> await this.get(`/item/${itemId}?mark_as_viewed=${mark_as_viewed}`);
-  }
-
-  async GetItemByAppItemId (appId: number, app_item_id: number): Promise<PodioAppItem> {
-    return <PodioAppItem> await this.get(`/app/${appId}/item/${app_item_id}/`);
-  }
-
-  async GetItemClone (itemId: number): Promise<PodioAppItem> {
-    return <PodioAppItem> await this.get(`/item/${itemId}/clone/`);
-  }
-
-  async GetItemByExternalId (appId: number, external_id: string): Promise<PodioAppItem> {
-    return <PodioAppItem> await this.get(`/item/app/${appId}/external_id/${external_id}`);
-  }
-
-  async GetItemCount (appId: number, key?: string, view_id: number=0): Promise<{count: number}> {
-    return <{count: number}> await this.get(`/item/app/${appId}/count?=view_id=${view_id}` + (key ? `&key=${key}` : ""));
-  }
-
-  async GetItemFieldValues (itemId: number, field_or_external_id: number): Promise<{values: object}> {
-    return <{values: object}> await this.get(`/item/${itemId}/value/${field_or_external_id}/v2`);
-  }
-
-  async GetItemPreviewForFieldReference (itemId: number, field_id: number): Promise<PodioAppItem> {
-    return <PodioAppItem> await this.get(`/item/${itemId}/reference/${field_id}/preview/`);
-  }
-
-  async GetItemReferences (itemId: number, limit: number=100): Promise<PodioAppItem[]> {
-    return <PodioAppItem[]> await this.get(`/item/${itemId}/reference?limit=${limit}`);
-  }
-
-  async GetItemRevision (itemId: number, revision: number): Promise<ItemRevision> {
-    return <ItemRevision> await this.get(`/item/${itemId}/revision/${revision}/`);
-  }
-
-  async GetItemRevisionDif (itemId: number, revision_from: number, revision_to: number): Promise<PodioItemRevisionDif> {
-    return (<PodioItemRevisionDif[]> await this.get(`/item/${itemId}/revision/${revision_from}/${revision_to}`))[0];
-  }
-
-  async GetItemRevisions (itemId: number): Promise<ItemRevision[]> {
-    return <ItemRevision[]> await this.get(`/item/${itemId}/revision`);
-  }
-
-  async RevertItemRevision (itemId: number, revision: number): Promise<{revision: number}> {
-    return <{revision: number}> await this.delete(`/item/${itemId}/revision/${revision}`);
-  }
-
-  async RevertItemToRevision (itemId: number, revision: number): Promise<{revision: number}> {
-    return <{revision: number}> await this.post(`/item/${itemId}/revision/${revision}/revert_to`);
-  }
-
-  async GetItemValues (itemId: number): Promise<ItemFieldsValues[]> {
-    return <ItemFieldsValues[]> await this.get(`/item/${itemId}/value/v2`);
-  }
-
-  async GetItemsAsXlsx (appId: number, key?: string, deleted_columns: boolean=false,
-    limit: number=20, offset: number=0, sort_by: string="", sort_desc: "true" | "false"="true", view_id: number=0 ): Promise<Buffer> {
-
-    const blobData =  <Buffer> await this.get(`/item/app/${appId}/xlsx?deleted_columns=${deleted_columns}&limit=${limit}&offset=${offset}&sort_by=${sort_by}&sort_desc=${sort_desc}&view_id=${view_id}` + (key ? `&key=${key}` : ""));
-
-    return blobData;
-
-  }
-
-  async GetMeetingURL (itemId: number): Promise<{url: string | null}> {
-    return <{url: string | null}> await this.get(`/item/${itemId}/meeting/url`);
-  }
-
-  async GetRecalcStatusForField (itemId: number, field_id: number): Promise<{status: string, timestamp: string | null}> {
-    return <{status: string, timestamp: string | null}> await this.get(`/item/${itemId}/field/${field_id}/recalc/status`);
-  }
-
-  async GetReferencesToItemByField (itemId: number, field_id: number, limit:number=10, offset:number=0): Promise<{item_id: number, title: string, link: string}> {
-    return <{item_id: number, title: string, link: string}> await this.get(`/item/${itemId}/reference/field/${field_id}`);
-  }
-
-  async RearrangeItem (itemId: number, rearrangeOptions: RearrangeOptions): Promise<PodioAppItem> {
-    return <PodioAppItem> await this.post(`/item/${itemId}/rearrange/`, rearrangeOptions);
-  }
-
   async criaWebhook ( options: WebhookOptions, appId?: number): Promise<{webhook_id: number}> {
     return <{webhook_id: number}>await this.post(
       `/hook/app/${appId}/`,
@@ -369,5 +222,4 @@ export class Podio implements IPodio {
       {code: webhook_verification_code}
     )
   }
-
 }
