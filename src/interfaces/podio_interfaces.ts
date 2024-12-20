@@ -49,6 +49,8 @@ export interface IPodioItems
   RearrangeItem (itemId: number, rearrangeOptions: RearrangeOptions): Promise<PodioAppItem>
   UpdateItem (itemId: number, updateOptions: UpdateItemPayload, hook: StrBool, silent: StrBool): Promise<UpdateItemResponse>
   UpdateItemFieldValues (itemId: number, field_or_external_id: number | string, values: object, hook: StrBool, silent: StrBool): Promise<UpdateItemResponse>
+  UpdateItemValues (itemId: number, updateOptions: UpdateItemPayload, hook: StrBool, silent: StrBool): Promise<UpdateItemResponse>
+
 }
 
 export interface IPodioWebhooks

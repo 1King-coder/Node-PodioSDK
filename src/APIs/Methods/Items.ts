@@ -172,4 +172,9 @@ export class PodioItems implements IPodioItems {
   async UpdateItemFieldValues (itemId: number, field_or_external_id: number | string, values: object, hook: StrBool="true", silent: StrBool="false"): Promise<UpdateItemResponse>{
     return <UpdateItemResponse> await this.Podio.put(`/item/${itemId}/value/${field_or_external_id}?hook=${hook}&silent=${silent}`, values);
   }
+
+  async UpdateItemValues (itemId: number, updateOptions: UpdateItemPayload, hook: StrBool, silent: StrBool): Promise<UpdateItemResponse> {
+    return <UpdateItemResponse> await this.Podio.put(`/item/${itemId}/value?hook=${hook}&silent=${silent}`, updateOptions);
+  }
+
 }
