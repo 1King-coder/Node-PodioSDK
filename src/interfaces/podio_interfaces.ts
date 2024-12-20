@@ -1,4 +1,4 @@
-import { AddItemPayload, AddItemResponse, ExportOptions, ExportResponse, FilterItemsResponse, FilterOptions, FindReferenceableItemsResponse, ItemFieldsValues, ItemRevision, PodioAppItem, PodioCreatedBy, PodioCreatedVia, PodioFields, PodioFile, PodioItemRevisionDif, RearrangeOptions, StrBool, UpdateItemPayload, Webhook, WebhookOptions } from "../types/podio_types";
+import { AddItemPayload, AddItemResponse, ExportOptions, ExportResponse, FilterItemsResponse, FilterOptions, FindReferenceableItemsResponse, ItemFieldsValues, ItemRevision, PodioAppItem, PodioCreatedBy, PodioCreatedVia, PodioFields, PodioFile, PodioItemRevisionDif, RearrangeOptions, StrBool, UpdateItemPayload, UpdateItemResponse, Webhook, WebhookOptions } from "../types/podio_types";
 
 
 
@@ -47,7 +47,8 @@ export interface IPodioItems
   GetRecalcStatusForField (itemId: number, field_id: number): Promise<{status: string, timestamp: string | null}>
   GetReferencesToItemByField (itemId: number, field_id: number, limit:number, offset:number): Promise<{item_id: number, title: string, link: string}>
   RearrangeItem (itemId: number, rearrangeOptions: RearrangeOptions): Promise<PodioAppItem>
-  UpdateItem (itemId: number, updateOptions: UpdateItemPayload, hook: StrBool, silent: StrBool): Promise<PodioAppItem>
+  UpdateItem (itemId: number, updateOptions: UpdateItemPayload, hook: StrBool, silent: StrBool): Promise<UpdateItemResponse>
+  UpdateItemFieldValues (itemId: number, field_or_external_id: number | string, values: object, hook: StrBool, silent: StrBool): Promise<UpdateItemResponse>
 }
 
 export interface IPodioWebhooks

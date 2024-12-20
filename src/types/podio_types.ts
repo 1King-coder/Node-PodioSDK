@@ -392,3 +392,9 @@ export type RearrangeOptions = {
 }
 
 export type StrBool = "true" | "false"
+
+
+export type UpdateItemResponse = {
+  revision: number;
+  title: string;
+}

@@ -5,7 +5,8 @@ import { AddItemPayload, AddItemResponse, ExportOptions, ExportResponse, FilterO
     FilterItemsResponse,
     PodioCreds,
     UpdateItemPayload,
-    StrBool} from "../../types/podio_types";
+    StrBool,
+    UpdateItemResponse} from "../../types/podio_types";
 
 export class PodioItems implements IPodioItems {
 
@@ -164,7 +165,11 @@ export class PodioItems implements IPodioItems {
     return <PodioAppItem> await this.Podio.post(`/item/${itemId}/rearrange/`, rearrangeOptions);
   }
 
-  async UpdateItem (itemId: number, updateOptions: UpdateItemPayload, hook: StrBool="true", silent: StrBool="false"): Promise<PodioAppItem> {
-    return <PodioAppItem> await this.Podio.put(`/item/${itemId}?hook=${hook}&silent=${silent}`, updateOptions);
+  async UpdateItem (itemId: number, updateOptions: UpdateItemPayload, hook: StrBool="true", silent: StrBool="false"): Promise<UpdateItemResponse> {
+    return <UpdateItemResponse> await this.Podio.put(`/item/${itemId}?hook=${hook}&silent=${silent}`, updateOptions);
+  }
+
+  async UpdateItemFieldValues (itemId: number, field_or_external_id: number | string, values: object, hook: StrBool="true", silent: StrBool="false"): Promise<UpdateItemResponse>{
+    return <UpdateItemResponse> await this.Podio.put(`/item/${itemId}/value/${field_or_external_id}?hook=${hook}&silent=${silent}`, values);
   }
 }
