@@ -2,7 +2,7 @@
 
 ## _This is a non-official package_
 
-- npm package link: [text](https://www.npmjs.com/package/node-podio-api-sdk)
+- npm package link: https://www.npmjs.com/package/node-podio-api-sdk
 
 This package is a voluntary work to make life easier when developing automations and integrations
 for Podio Applications.
