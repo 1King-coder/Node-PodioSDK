@@ -29,7 +29,7 @@ That package is a personal initiative to make my life easier when developing aut
 for my actual job at a Academic initiative (Junior enterprise) where we use Podio a lot and I couldn't make
 any of the sdk work properly (except the php and ruby one) so I've decided to develop this one.
 
-# How to use app.ts for testing (until the unit tests are not developted)
+# How to use app.ts for testing (until the unit tests are not developed)
 - Create a .env file
 - Add your credentials with the same names in the code
 - write your tests!
