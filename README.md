@@ -2,6 +2,8 @@
 
 ## _This is a non-official package_
 
+- npm package link: [text](https://www.npmjs.com/package/node-podio-api-sdk)
+
 This package is a voluntary work to make life easier when developing automations and integrations
 for Podio Applications.
 
@@ -12,10 +14,12 @@ Check https://developers.podio.com/doc for more information about the API method
 
 This package still in development and is far from finishing.
 
+To install the package run: `npm i node-podio-api-sdk`
+
 For those who want to help the development of this tool:
 
 - Fork it
-- Create a new branch with the name of your feature (git checkout -b new-feature)
+- Create a new branch with the name of your feature `git checkout -b new-feature-name`
 - Test it
 - Commit your changes
 - Push your commits to the branch
