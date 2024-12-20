@@ -43,3 +43,4 @@ podio_token.json
 *token.json
 
 /node_modules
+./src/app.ts
