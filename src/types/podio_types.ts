@@ -322,6 +322,8 @@ export type AddItemPayload = {
   }
 }
 
+export type UpdateItemPayload = AddItemPayload
+
 export type ExportOptions = {
   limit?: number;
   offset?: number;
@@ -388,3 +390,5 @@ export type RearrangeOptions = {
     above: number;
   }
 }
+
+export type StrBool = "true" | "false"

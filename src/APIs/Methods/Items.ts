@@ -3,7 +3,9 @@ import { AddItemPayload, AddItemResponse, ExportOptions, ExportResponse, FilterO
    FindReferenceableItemsResponse, PodioAppItem, ItemRevision, PodioItemRevisionDif,
     ItemFieldsValues, RearrangeOptions,
     FilterItemsResponse,
-    PodioCreds} from "../../types/podio_types";
+    PodioCreds,
+    UpdateItemPayload,
+    StrBool} from "../../types/podio_types";
 
 export class PodioItems implements IPodioItems {
 
@@ -160,5 +162,9 @@ export class PodioItems implements IPodioItems {
 
   async RearrangeItem (itemId: number, rearrangeOptions: RearrangeOptions): Promise<PodioAppItem> {
     return <PodioAppItem> await this.Podio.post(`/item/${itemId}/rearrange/`, rearrangeOptions);
+  }
+
+  async UpdateItem (itemId: number, updateOptions: UpdateItemPayload, hook: StrBool="true", silent: StrBool="false"): Promise<PodioAppItem> {
+    return <PodioAppItem> await this.Podio.put(`/item/${itemId}?hook=${hook}&silent=${silent}`, updateOptions);
   }
 }
