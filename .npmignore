@@ -6,3 +6,6 @@
 
 tsconfig.json
 tsup.config.ts
+*token.json
+
+podio_token.json
