@@ -96,9 +96,11 @@ export class Podio implements IPodio {
   }
 
   isAuthenticated (): boolean {
+    let isAuthenticated = false;
 
     if (!fs.existsSync(this.token_path)) {
-      return false;
+      isAuthenticated = false;
+      return isAuthenticated;
     }
 
     const token: Buffer = fs.readFileSync(this.token_path);
@@ -106,11 +108,11 @@ export class Podio implements IPodio {
     const tokenJson: PodioTokenData = JSON.parse(token.toString());
 
     if (tokenJson.access_token === undefined) {
-      return false;
+      isAuthenticated = false;
     }
 
     if (token.length === 0) {
-      return false;
+      isAuthenticated = false;
     }
 
     axios.get(
@@ -121,18 +123,23 @@ export class Podio implements IPodio {
       }
     ).then((res) => {
       if (res.status === 403) {
-        return false;
+        isAuthenticated = false;
+      }
+
+      if (res.status === 401) {
+        isAuthenticated = false;
       }
 
       if (res.status === 200) {
-        return true;
+        isAuthenticated = true;
       }
     }).catch((err) => {
-      console.log(err);
-      return false;
+      isAuthenticated = false;
     })
 
-    return true;
+    return isAuthenticated;
+
+
   }
 
   async refreshToken (): Promise<void> {
@@ -156,6 +163,7 @@ export class Podio implements IPodio {
     ).then((res) => {
       if (res.status === 200) {
         fs.writeFileSync(this.token_path, JSON.stringify(res.data));
+        this.token = (<PodioTokenData>res.data).access_token;
         return;
       }
     }).catch((err) => {
